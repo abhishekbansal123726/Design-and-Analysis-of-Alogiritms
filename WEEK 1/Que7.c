@@ -1,4 +1,4 @@
-#include <stdio.h>
+ //Write a C program to rotate an array to the right by K positions without using another array. Array: 1 2 3 4 5 6 K = 2 Output: 5 6 1 2 3 4#include <stdio.h>
 
 int main()
 {
