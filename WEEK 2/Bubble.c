@@ -1,29 +1,51 @@
 #include <stdio.h>
+#include <time.h>
 
 int main() {
-    int a[100], n, i, j, temp;
+    static int arr[10000];
 
-    printf("Enter size: ");
-    scanf("%d", &n);
+    int sizes[] = {1000, 2000, 4000, 6000, 8000, 10000};
+    int numSizes = 6;
 
-    printf("Enter elements:\n");
-    for(i = 0; i < n; i++)
-        scanf("%d", &a[i]);
+    printf("Bubble Sort Time Complexity Analysis\n");
+    printf("------------------------------------\n");
 
-    for(i = 0; i < n - 1; i++) {
-        for(j = 0; j < n - i - 1; j++) {
+    for(int s = 0; s < numSizes; s++) {
 
-            if(a[j] > a[j + 1]) {
-                temp = a[j];
-                a[j] = a[j + 1];
-                a[j + 1] = temp;
+        int n = sizes[s];
+        int temp;
+
+        // Reverse order array
+        for(int i = 0; i < n; i++)
+            arr[i] = n - i;
+
+        clock_t start = clock();
+
+        // Bubble Sort
+        for(int i = 0; i < n - 1; i++) {
+
+            for(int j = 0; j < n - i - 1; j++) {
+
+                if(arr[j] > arr[j + 1]) {
+
+                    temp = arr[j];
+                    arr[j] = arr[j + 1];
+                    arr[j + 1] = temp;
+                }
             }
         }
+
+        clock_t end = clock();
+
+        double time_taken =
+            (double)(end - start) / CLOCKS_PER_SEC;
+
+        printf("Input Size = %d, Time = %f seconds\n",
+               n, time_taken);
     }
 
-    printf("Sorted array:\n");
-    for(i = 0; i < n; i++)
-        printf("%d ", a[i]);
+    printf("\nTime Complexity: O(n^2)\n");
+    printf("Space Complexity: O(1)\n");
 
     return 0;
 }
