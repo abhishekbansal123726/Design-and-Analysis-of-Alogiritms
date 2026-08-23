@@ -1,53 +1,75 @@
 #include <stdio.h>
+#include <time.h>
 
-void quickSort(int a[], int low, int high) {
-    int i, j, pivot, temp;
+static int arr[10000];
 
-    if(low < high) {
+void swap(int *a, int *b) {
+    int temp = *a;
+    *a = *b;
+    *b = temp;
+}
 
-        pivot = a[low];
-        i = low;
-        j = high;
+int partition(int low, int high) {
 
-        while(i < j) {
+    int pivot = arr[high];
+    int i = low - 1;
 
-            while(a[i] <= pivot && i < high)
-                i++;
+    for (int j = low; j < high; j++) {
 
-            while(a[j] > pivot)
-                j--;
-
-            if(i < j) {
-                temp = a[i];
-                a[i] = a[j];
-                a[j] = temp;
-            }
+        if (arr[j] < pivot) {
+            i++;
+            swap(&arr[i], &arr[j]);
         }
+    }
 
-        temp = a[low];
-        a[low] = a[j];
-        a[j] = temp;
+    swap(&arr[i + 1], &arr[high]);
 
-        quickSort(a, low, j - 1);
-        quickSort(a, j + 1, high);
+    return i + 1;
+}
+
+void quickSort(int low, int high) {
+
+    if (low < high) {
+
+        int pi = partition(low, high);
+
+        quickSort(low, pi - 1);
+        quickSort(pi + 1, high);
     }
 }
 
 int main() {
-    int a[100], n, i;
 
-    printf("Enter size: ");
-    scanf("%d", &n);
+    int sizes[] = {1000, 2000, 4000, 6000, 8000, 10000};
+    int numSizes = 6;
 
-    printf("Enter elements:\n");
-    for(i = 0; i < n; i++)
-        scanf("%d", &a[i]);
+    printf("Quick Sort Time Complexity Analysis\n");
+    printf("-----------------------------------\n");
 
-    quickSort(a, 0, n - 1);
+    for (int s = 0; s < numSizes; s++) {
 
-    printf("Sorted array:\n");
-    for(i = 0; i < n; i++)
-        printf("%d ", a[i]);
+        int n = sizes[s];
+
+        // Reverse order array
+        for (int i = 0; i < n; i++)
+            arr[i] = n - i;
+
+        clock_t start = clock();
+
+        quickSort(0, n - 1);
+
+        clock_t end = clock();
+
+        double time_taken =
+            (double)(end - start) / CLOCKS_PER_SEC;
+
+        printf("Input Size = %d, Time = %f seconds\n",
+               n, time_taken);
+    }
+
+    printf("\nAverage Time Complexity: O(n log n)\n");
+    printf("Worst Case Time Complexity: O(n^2)\n");
+    printf("Space Complexity: O(log n) average\n");
 
     return 0;
 }
