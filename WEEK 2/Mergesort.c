@@ -1,52 +1,73 @@
 #include <stdio.h>
+#include <time.h>
 
-void merge(int a[], int low, int mid, int high) {
-    int i = low, j = mid + 1, k = 0;
-    int temp[100];
+static int arr[10000];
+static int temp[10000];
 
-    while(i <= mid && j <= high) {
-        if(a[i] < a[j])
-            temp[k++] = a[i++];
+void merge(int low, int mid, int high) {
+    int i = low;
+    int j = mid + 1;
+    int k = low;
+
+    while (i <= mid && j <= high) {
+        if (arr[i] <= arr[j])
+            temp[k++] = arr[i++];
         else
-            temp[k++] = a[j++];
+            temp[k++] = arr[j++];
     }
 
-    while(i <= mid)
-        temp[k++] = a[i++];
+    while (i <= mid)
+        temp[k++] = arr[i++];
 
-    while(j <= high)
-        temp[k++] = a[j++];
+    while (j <= high)
+        temp[k++] = arr[j++];
 
-    for(i = low, k = 0; i <= high; i++, k++)
-        a[i] = temp[k];
+    for (i = low; i <= high; i++)
+        arr[i] = temp[i];
 }
 
-void mergeSort(int a[], int low, int high) {
-    if(low < high) {
-        int mid = (low + high) / 2;
+void mergeSort(int low, int high) {
+    if (low < high) {
+        int mid = low + (high - low) / 2;
 
-        mergeSort(a, low, mid);
-        mergeSort(a, mid + 1, high);
+        mergeSort(low, mid);
+        mergeSort(mid + 1, high);
 
-        merge(a, low, mid, high);
+        merge(low, mid, high);
     }
 }
 
 int main() {
-    int a[100], n, i;
 
-    printf("Enter size: ");
-    scanf("%d", &n);
+    int sizes[] = {1000, 2000, 4000, 6000, 8000, 10000};
+    int numSizes = 6;
 
-    printf("Enter elements:\n");
-    for(i = 0; i < n; i++)
-        scanf("%d", &a[i]);
+    printf("Merge Sort Time Complexity Analysis\n");
+    printf("-----------------------------------\n");
 
-    mergeSort(a, 0, n - 1);
+    for (int s = 0; s < numSizes; s++) {
 
-    printf("Sorted array:\n");
-    for(i = 0; i < n; i++)
-        printf("%d ", a[i]);
+        int n = sizes[s];
+
+        // Reverse order array
+        for (int i = 0; i < n; i++)
+            arr[i] = n - i;
+
+        clock_t start = clock();
+
+        mergeSort(0, n - 1);
+
+        clock_t end = clock();
+
+        double time_taken =
+            (double)(end - start) / CLOCKS_PER_SEC;
+
+        printf("Input Size = %d, Time = %f seconds\n",
+               n, time_taken);
+    }
+
+    printf("\nTime Complexity: O(n log n)\n");
+    printf("Space Complexity: O(n)\n");
 
     return 0;
 }
